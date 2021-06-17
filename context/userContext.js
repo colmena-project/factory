@@ -1,5 +1,6 @@
-import { createContext, useState } from "react";
+import { createContext, ReactElement, useState } from "react";
 import { ParseServer } from "../lib/parse";
+// import { AuthType } from "../type";
 
 const currentUser = ParseServer.User.current();
 

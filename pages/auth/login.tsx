@@ -1,7 +1,10 @@
 import { useRouter } from "next/router";
+import Link from "next/link";
 import Image from "next/image";
 import { useEffect } from "react";
 import useUser from "../../hooks/useUser";
+import { Spinner } from "../../components/general/Spinner";
+import { Button } from "../../components/button";
 
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -28,38 +31,56 @@ const Login = () => {
   };
 
   useEffect(() => {
-    console.log({ isAuth });
     if (isAuth) {
-      router.replace("/home");
+      router.push("/");
     }
   }, [isAuth]);
 
   return (
     <>
-      {isLoginLoading && (
-        <div className="form">
-          <strong>Controlando las credenciales...</strong>
-        </div>
-      )}
-      {isAuth && (
-        <div className="form">
-          <strong>Redireccionando...</strong>
-        </div>
-      )}
-      {!isLoginLoading && !isAuth && (
-        <div className="page">
-          <div className="container">
-            <div className="inner">
-              <div className="logo">
-                <Image
-                  src="/img/logo.png"
-                  className="logo_image"
-                  alt="Logo"
-                  width="213"
-                  height="46"
-                />
-              </div>
+      <div className="page">
+        <div className="container">
+          <div className="inner">
+            <div className="logo">
+              <Image
+                src="/img/logo.png"
+                className="logo_image"
+                alt="Logo"
+                width="213"
+                height="46"
+              />
+            </div>
 
+            {isLoginLoading && (
+              <div className="front">
+                <div className="container">
+                  <div className="inner">
+                    <div className="message">
+                      <Spinner />
+                      <strong className="message_info">
+                        Controlando las credenciales...
+                      </strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            {isAuth && (
+              <div className="front">
+                <div className="container">
+                  <div className="inner">
+                    <div className="message">
+                      <Spinner />
+                      <strong className="message_info">
+                        Redireccionando...
+                      </strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="form_login">
               <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
@@ -90,20 +111,14 @@ const Login = () => {
 
                   <div className="box">
                     <div className="box_item">
-                      <button
-                        type="submit"
-                        className=" bg-green-400 focus:border focus:border-solid focus:border-green-200 text-white font-bold py-2 px-4 rounded"
-                      >
-                        Iniciar Sesión
-                      </button>
+                      <Button>Iniciar Sesión</Button>
                     </div>
                     <div className="box_item">
-                      <a
-                        className="w-full text-center no-underline inline-block align-baseline font-bold xs:text-sm text-xs text-blue hover:text-blue-dark float-right"
-                        href="#"
-                      >
-                        Recuperar Contraseña?
-                      </a>
+                      <Link href="/auth/reset-password">
+                        <a className="w-full text-center no-underline inline-block align-baseline font-bold xs:text-sm text-xs text-blue hover:text-blue-dark float-right">
+                          Recuperar Contraseña?
+                        </a>
+                      </Link>
                     </div>
                   </div>
                 </Form>
@@ -111,18 +126,21 @@ const Login = () => {
             </div>
           </div>
         </div>
-      )}
+      </div>
       <style jsx>
         {`
           .page {
-            @apply bg-gray-200 h-screen w-screen font-sans;
+            @apply bg-gray-200 h-screen w-screen font-sans text-sm;
           }
           .container {
-            @apply flex flex-col items-center flex-1 h-full justify-center px-4 sm:px-0 m-auto;
+            @apply px-4  m-auto flex flex-1 h-full flex-col pt-20 items-center;
+            @apply sm:justify-center sm:px-0 sm:mt-0 sm:pt-0;
           }
+
           .inner {
             @apply sm:w-3/4 lg:w-1/2;
           }
+
           .logo {
             @apply flex items-center justify-center mb-6;
           }
@@ -130,9 +148,21 @@ const Login = () => {
             @apply w-1/2;
           }
 
-          :global(form),
-          .form {
-            @apply border-green-400 p-8 border-t-4 bg-white mb-6 rounded-lg shadow-lg;
+          .form_login {
+          }
+
+          :global(form) {
+            @apply border-colmena p-8 border-t-4 bg-white mb-6 rounded-lg shadow-lg w-auto h-auto static;
+          }
+
+          .front {
+            @apply absolute top-0 left-0 w-full h-full bg-opacity-20 bg-green-100  backdrop-filter backdrop-blur;
+            animation: fadeIn linear 7s;
+            animation: fadeOut linear 7s;
+          }
+
+          .message {
+            @apply bg-white m-7 p-12 flex flex-wrap content-center;
           }
 
           .form-control {
@@ -144,8 +174,8 @@ const Login = () => {
           }
 
           :global(input) {
-            @apply block appearance-none w-full bg-white border border-gray-200 px-2 py-2 rounded shadow;
-            @apply hover:border-green-400 focus:border-green-400 focus:ring-green-500 focus:outline-none focus:ring-2;
+            @apply block appearance-none w-full bg-white border border-gray-200 px-2 py-2 rounded;
+            @apply hover:border-colmena focus:border-colmena focus:ring-colmena focus:outline-none focus:ring-2;
           }
 
           .error {
@@ -157,7 +187,11 @@ const Login = () => {
           }
 
           .box_item {
-            @apply w-1/2;
+            @apply m-2;
+          }
+
+          .message_info {
+            @apply ml-3 mt-2;
           }
         `}
       </style>
