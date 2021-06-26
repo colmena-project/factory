@@ -1,13 +1,36 @@
 import Head from "next/head";
-import Header from "../components/layout/Header";
-
 import authPage from "../components/secure/authPage";
-import { useState } from "react";
+import { profileApi } from "../services";
+import { ParseServer } from "../lib/parse";
+import { useEffect, useState } from "react";
 
 import { Profile as ProfileUser } from "../components/profile";
+import { Breadcrumbs } from "../components/layout/Breadcrumbs";
 
 const Profile = () => {
-  const [filter, setFilter] = useState<string>("");
+  const [account, setAccount] = useState(undefined);
+
+  const getAccount = async () => {
+    const currentUser = ParseServer.User.current();
+    const data = await profileApi.getMyAccount(currentUser.id);
+    setAccount(data);
+    return data;
+  };
+
+  useEffect(() => {
+    getAccount();
+  }, []);
+
+  const dataBreadcrumbs = [
+    {
+      name: "Inicio",
+      href: "/",
+    },
+    {
+      name: "Perfil",
+    },
+  ];
+
   return (
     <>
       <Head>
@@ -15,18 +38,13 @@ const Profile = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header filter={filter} setFilter={setFilter} />
+      <div className="container_row">
+        <Breadcrumbs data={dataBreadcrumbs} />
+        <ProfileUser account={account} />
+      </div>
 
-      <main className="container">
-        <div className="container_row">
-          <ProfileUser />
-        </div>
-      </main>
       <style jsx>
         {`
-          .container {
-            @apply mx-auto;
-          }
           .container_row {
             @apply mx-2;
           }

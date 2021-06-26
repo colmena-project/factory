@@ -6,7 +6,6 @@ import { Breadcrumbs } from "../../components/layout/Breadcrumbs";
 import authPage from "../../components/secure/authPage";
 import { useState } from "react";
 const TransaccionEdit = () => {
-  const [filter, setFilter] = useState<string>("");
   const dataBreadcrumbs = [
     {
       name: "Inicio",
@@ -27,19 +26,8 @@ const TransaccionEdit = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header filter={filter} setFilter={setFilter} />
-
-      <main className="container">
-        <Breadcrumbs data={dataBreadcrumbs} />
-        <Transaccion />
-      </main>
-      <style jsx>
-        {`
-          .container {
-            @apply mx-auto p-2;
-          }
-        `}
-      </style>
+      <Breadcrumbs data={dataBreadcrumbs} />
+      <Transaccion />
     </>
   );
 };

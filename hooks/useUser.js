@@ -10,15 +10,16 @@ export default function useUser() {
     menssageError: "",
   };
   const [state, setState] = useState(initValues);
+  const [account, setAccount] = useState(undefined);
   const { isAuth, setIsAuth } = useContext(Context);
 
   const login = useCallback(
     async ({ username, password }) => {
       setState({ loading: true, error: false, menssageError: "" });
       await ParseServer.User.logIn(username, password)
-        .then(() => {
+        .then(async () => {
           const currentUser = ParseServer.User.current();
-          console.log(Boolean(currentUser));
+
           setIsAuth(Boolean(currentUser));
           setState({ loading: false, error: false, menssageError: "" });
         })
@@ -49,8 +50,8 @@ export default function useUser() {
     [isAuth]
   );
 
-  const logout = useCallback(() => {
-    ParseServer.User.logOut().then(() => {
+  const logout = useCallback(async () => {
+    await ParseServer.User.logOut().then(() => {
       setIsAuth(false);
     });
   }, [isAuth]);
@@ -73,6 +74,8 @@ export default function useUser() {
     hasLoginError: state.error,
     menssageError: state.menssageError,
     isAuth,
+    account,
+    setAccount,
     login,
     logout,
     requestPasswordReset,

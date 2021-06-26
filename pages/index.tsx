@@ -6,7 +6,6 @@ import { cards } from "../data/dummy";
 
 import authPage from "../components/secure/authPage";
 import { useState } from "react";
-import useUser from "../hooks/useUser";
 
 const Home = () => {
   const [filter, setFilter] = useState<string>("");
@@ -17,36 +16,26 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header filter={filter} setFilter={setFilter} />
-
-      <main className="container">
-        <div className="container_row">
-          <div className="conteiner_row_input">
-            <div className="mt-4 ml-2">
-              <label className="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  id="checkbox1"
-                  className="text-colmena"
-                />
-                <span className="pl-5">Ver sólo pendientes</span>
-              </label>
-            </div>
-          </div>
-          <div className="container_row_left">
-            <ListWasteAcepted />
-          </div>
-
-          <div className="container_row_right">
-            {cards && cards.map((cardInfo) => <Card data={cardInfo} />)}
+      <div className="container_row">
+        <div className="conteiner_row_input">
+          <div className="mt-4 ml-2">
+            <label className="inline-flex items-center">
+              <input type="checkbox" id="checkbox1" className="text-colmena" />
+              <span className="pl-5">Ver sólo pendientes</span>
+            </label>
           </div>
         </div>
-      </main>
+        <div className="container_row_left">
+          <ListWasteAcepted />
+        </div>
+
+        <div className="container_row_right">
+          {cards && cards.map((cardInfo) => <Card data={cardInfo} />)}
+        </div>
+      </div>
+
       <style jsx>
         {`
-          .container {
-            @apply mx-auto;
-          }
           .container_row {
             @apply grid grid-cols-5 gap-4;
           }

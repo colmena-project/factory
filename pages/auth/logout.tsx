@@ -27,7 +27,6 @@ export default function Logout() {
       <div className="page">
         <div className="container">
           <div className="inner">
-            \
             <div className="logo">
               <Image
                 src="/img/logo.png"

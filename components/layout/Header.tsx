@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+
+import { Context as UserContext } from "../../context/userContext";
+import { useDetectOutsideClick } from "../../hooks/useDetectOutsideClick";
 
 const Header = ({
   filter,
@@ -11,20 +14,29 @@ const Header = ({
   setFilter: Function;
 }) => {
   const router = useRouter();
+  const { account } = useContext(UserContext);
+  // const [userNavbar, setUserNavar] = useState(false);
+  const [userImage, setUserImage] = useState<string>("/img/user-default.png");
 
-  const [userNavbar, setUserNavar] = useState(false);
+  const dropdownRef = useRef<HTMLElement>(null);
+  const [isActive, setIsActive]: [boolean, Function] = useDetectOutsideClick({
+    el: dropdownRef,
+    initialState: false,
+  });
 
-  const onChange = (valueFilter: string) => {
+  const onChangeInput = (valueFilter: string) => {
     setFilter(valueFilter || "");
   };
 
   const handleClickUser = () => {
-    setUserNavar(!userNavbar);
+    setIsActive(!isActive);
   };
 
-  const handelLogOut = () => {
-    router.replace("/auth/logout");
-  };
+  useEffect(() => {
+    if (account !== undefined) {
+      setUserImage(account.get("avatar").url());
+    }
+  }, [account]);
 
   return (
     <>
@@ -51,9 +63,9 @@ const Header = ({
               <input
                 value={filter || ""}
                 onChange={(e) => {
-                  onChange(e.target.value);
+                  onChangeInput(e.target.value);
                 }}
-                className="input"
+                className="input_search"
                 placeholder="buscar transacciones, cod de prod, usuario"
               />
             </div>
@@ -65,16 +77,17 @@ const Header = ({
               >
                 <span className="sr-only">Abrir menu del usuario</span>
                 <Image
-                  src="/img/profile_x1.png"
+                  src={userImage}
                   alt="Perfil"
                   width="36"
+                  className="perfil rounded-full"
                   height="36"
                 />
               </button>
             </div>
 
             <div
-              className={userNavbar ? "menu_user  " : "menu_user  hidden"}
+              className={isActive ? "menu_user  " : "menu_user  hidden"}
               role="menu"
               aria-orientation="vertical"
               aria-labelledby="user-menu-button"
@@ -88,18 +101,20 @@ const Header = ({
                   Perfil
                 </a>
               </Link>
-              <a
-                onClick={handelLogOut}
-                className="menu_user_item"
-                role="menuitem"
-                id="user-menu-item-1"
-              >
-                Cerrar Sesion
-              </a>
+              <Link href="/auth/logout">
+                <a
+                  className="menu_user_item"
+                  role="menuitem"
+                  id="user-menu-item-1"
+                >
+                  Cerrar Sesion
+                </a>
+              </Link>
             </div>
           </div>
         </div>
       </div>
+
       <style jsx>
         {`
           .header {
@@ -134,9 +149,12 @@ const Header = ({
           .avatar {
           }
 
-          .input {
+          .input_search {
             transition: background-color 0.5s linear;
             @apply m-1 md:m-2 p-1 md:p-3 bg-transparent rounded md:w-96 w-24 font-medium text-white placeholder-white focus:bg-white focus:placeholder-gray-600 focus:text-gray-900 focus:outline-none;
+          }
+          .perfil {
+            transition: all 0.5s ease;
           }
 
           .menu_user {
@@ -153,3 +171,4 @@ const Header = ({
 };
 
 export default Header;
+// export default React.memo(Header, () => true);
