@@ -3,36 +3,36 @@ import Parse from "parse";
 const model = "Account";
 
 class ApiCoreProfile extends ApiCore {
-  async getMyAccount(userId: string, force = false) {
-    // try {
-    //search Account
-    const account = Parse.Object.extend("Account");
-    const query = new Parse.Query(account);
+  async getMyAccount(userId: string, force: boolean = false) {
+    try {
+      //search Account
+      const account = Parse.Object.extend("Account");
+      const query = new Parse.Query(account);
 
-    const acountId = JSON.parse(localStorage.getItem("acount"));
-    if (acountId !== null && force === false) {
-      query.fromLocalDatastore();
-      const accountData = await query.get(acountId);
-      this.getMyAccount(userId, true);
+      const acountId = JSON.parse(localStorage.getItem("acount"));
+      if (acountId !== null && force === false) {
+        query.fromLocalDatastore();
+        const accountData = await query.get(acountId);
+        this.getMyAccount(userId, true);
+        return accountData;
+      }
+
+      const user = Parse.Object.extend("User");
+
+      const innerQuery = new Parse.Query(user);
+      innerQuery.equalTo("objectId", userId);
+
+      query.matchesQuery("user", innerQuery);
+      const accountData = await query.first();
+
+      await accountData.pin();
+      localStorage.setItem("acount", JSON.stringify(accountData.id));
+
       return accountData;
+    } catch (err) {
+      const error = new Error(`Error al recuperar la cuenta. ${err.message}`);
+      throw error;
     }
-
-    const user = Parse.Object.extend("User");
-
-    const innerQuery = new Parse.Query(user);
-    innerQuery.equalTo("objectId", userId);
-
-    query.matchesQuery("user", innerQuery);
-    const accountData = await query.first();
-
-    await accountData.pin();
-    localStorage.setItem("acount", JSON.stringify(accountData.id));
-
-    return accountData;
-    // } catch (err) {
-    //   const error = new Error(`Error al recuperar la cuenta. ${err.message}`);
-    //   throw error;
-    // }
   }
 
   async uploadPhotoProfile(

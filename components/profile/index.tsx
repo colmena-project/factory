@@ -7,6 +7,7 @@ import Parse from "parse";
 import { Button } from "../../components/button";
 import { Spinner } from "../general";
 import { profileApi } from "../../services";
+import { alertService } from "../../services/alert";
 
 export const Profile = ({ account }: { account: Parse.Object }) => {
   interface AccountValues {
@@ -71,6 +72,10 @@ export const Profile = ({ account }: { account: Parse.Object }) => {
   const onSubmitPatchHandler = async (values: any) => {
     setLoading(true);
     await profileApi.updateData(account, values);
+    alertService.success("El Perfil fue modificado", {
+      keepAfterRouteChange: true,
+      modal: true,
+    });
     setLoading(false);
   };
 

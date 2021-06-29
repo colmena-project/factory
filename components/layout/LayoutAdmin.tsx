@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import Header from "./Header";
+import { Alert } from "../alert/Alert";
 
 export const LayoutAdmin = ({
   children,
@@ -14,7 +15,10 @@ export const LayoutAdmin = ({
     <>
       <Header filter={filter} setFilter={setFilter} />
 
-      <main className="container">{children}</main>
+      <main className="container">
+        <Alert />
+        {children}
+      </main>
       <style jsx>
         {`
           .container {
