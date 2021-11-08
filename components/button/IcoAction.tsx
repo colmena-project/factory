@@ -3,15 +3,21 @@ import { ReactElement, ReactNode } from "react";
 interface ButtonInterface {
   children: ReactElement | ReactNode | string;
   onClick?: Function | undefined;
+  disabled?: boolean;
 }
 
 export const IcoAction = ({
   children,
   onClick = undefined,
+  disabled = false,
 }: ButtonInterface) => {
   return (
     <>
-      <button type="button" onClick={() => onClick}>
+      <button
+        disabled={disabled}
+        type="button"
+        onClick={() => onClick && onClick()}
+      >
         {children}
       </button>
       <style jsx>

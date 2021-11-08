@@ -1,25 +1,91 @@
 import { RowWasteAcepted } from "./rowWasteAccepted";
+import Parse from "parse";
 import { data } from "../../data/dummy";
 import { RowType } from "./Type";
-export const ListWasteAcepted = () => {
+import { useEffect, useState } from "react";
+import { transactionApi } from "../../services/model/transactionApi";
+import { LoadingType } from "../../type";
+import { Spinner } from "../general";
+export const ListWasteAcepted = ({
+  recyclingCenter,
+}: {
+  recyclingCenter: Parse.Object | undefined;
+}) => {
+  const [listWasted, setListWasted] = useState<undefined | Parse.Object[]>(
+    undefined
+  );
+
+  const [loading, setLoading] = useState<LoadingType>("loading");
+
+  const [subscription, SetSubscription] = useState(undefined);
+
+  const listeningChange = async () => {
+    subscription.on("leave", (object) => {
+      const incomingsTransactions = Array();
+      listWasted.forEach((element) => {
+        if (element.id !== object.id) {
+          incomingsTransactions.push(element);
+        }
+      });
+      setListWasted(incomingsTransactions);
+    });
+
+    subscription.on("enter", (object) => {
+      setListWasted((actualCount) => [...actualCount, object]);
+    });
+
+    subscription.on("enter", (object) => {
+      setListWasted((actualCount) => [...actualCount, object]);
+    });
+
+    subscription.on("create", (object) => {
+      !object.get("expiredAt") &&
+        setListWasted((actualCount) => [...actualCount, object]);
+    });
+  };
+
+  const getListWastedAccept = async () => {
+    if (recyclingCenter && !recyclingCenter.value) {
+      const [firstFactory] = recyclingCenter;
+      const { subscription, result } =
+        await transactionApi.getAlltransactionAccept(firstFactory.id);
+      setListWasted(result);
+      SetSubscription(subscription);
+    }
+    setLoading("iddle");
+  };
+
+  useEffect(() => {
+    recyclingCenter && getListWastedAccept();
+  }, [recyclingCenter]);
+
+  useEffect(() => {
+    subscription && listeningChange();
+  }, [subscription]);
+
   return (
     <>
-      <table className="">
-        <thead>
-          <tr>
-            <th className="with_2_12">Pedido</th>
-            <th className="with_2_12 desktop">Usuario</th>
-            <th className="with_2_12 mobil">Producto</th>
-            <th className="with_2_12 desktop">Transacción</th>
-            <th className="with_state">Estado</th>
-            <th className="with_2_12">Total</th>
-            <th className="with_action">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data && data.map((row) => <RowWasteAcepted row={row} />)}
-        </tbody>
-      </table>
+      {loading === "loading" ? (
+        <Spinner />
+      ) : (
+        <table className="">
+          <thead>
+            <tr>
+              <th className="with_2_12">Pedido</th>
+              <th className="with_2_12 desktop">Usuario</th>
+              <th className="with_2_12 mobil">Producto</th>
+              <th className="with_2_12 desktop">Transacción</th>
+              <th className="with_state">Estado</th>
+              <th className="with_2_12">Total</th>
+              <th className="with_action">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {listWasted &&
+              listWasted.map((row) => <RowWasteAcepted transaction={row} />)}
+          </tbody>
+        </table>
+      )}
       <style jsx>
         {`
           table {

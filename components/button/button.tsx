@@ -4,6 +4,7 @@ interface ButtonInterface {
   children: ReactElement | ReactNode | string;
   disabled?: boolean;
   onClick?: Function | undefined;
+  type?: "primary" | "secundary";
   typeButton?: "button" | "submit" | "reset";
 }
 
@@ -12,20 +13,44 @@ export const Button = ({
   disabled = false,
   onClick = undefined,
   typeButton = "submit",
+  type = "primary",
 }: ButtonInterface) => {
   return (
     <>
-      <button type={typeButton} disabled={disabled} onClick={() => onClick}>
-        {children}
-      </button>
+      <>
+        {onClick ? (
+          <button
+            className={type}
+            type={typeButton}
+            disabled={disabled}
+            onClick={() => onClick()}
+          >
+            {children}
+          </button>
+        ) : (
+          <button className={type} type={typeButton} disabled={disabled}>
+            {children}
+          </button>
+        )}
+      </>
       <style jsx>
         {`
           button {
-            @apply select-none cursor-pointer bg-colmena text-white font-bold py-2 px-4 rounded;
-            @apply hover:border-green-600 hover:bg-colmena-dark  focus:border-white focus:ring-white focus:outline-none focus:ring-1;
+            @apply select-none cursor-pointer py-2 px-4 rounded text-sm;
+            @apply focus:outline-none focus:ring-1;
             transition: opacity 0.3s ease;
             min-width: 140px;
             height: 34px;
+          }
+
+          button.primary {
+            @apply bg-colmena text-white;
+            @apply hover:border-green-600 hover:bg-colmena-dark  focus:border-white focus:ring-white;
+          }
+
+          button.secundary {
+            @apply bg-gray-300 text-gray-900;
+            @apply hover:border-gray-600 hover:bg-gray-400   focus:border-white focus:ring-white;
           }
 
           button[disabled] {

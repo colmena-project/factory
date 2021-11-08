@@ -3,11 +3,11 @@ import { useContext } from "react";
 import { Context as UserContext } from "../../context/userContext";
 
 const Login = () => {
-  const { setAccount } = useContext(UserContext);
+  const { setAccount, setFactory } = useContext(UserContext);
 
   return (
     <>
-      <LoginForm setAccount={setAccount} />
+      <LoginForm setAccount={setAccount} setFactory={setFactory} />
     </>
   );
 };

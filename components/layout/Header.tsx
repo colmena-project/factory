@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 
 import { Context as UserContext } from "../../context/userContext";
 import { useDetectOutsideClick } from "../../hooks/useDetectOutsideClick";
+import { IcoColmenaIcon } from "../Icon";
+import IcoColmenaText from "../Icon/IcoColmenaText";
 
 const Header = ({
   filter,
@@ -14,9 +16,11 @@ const Header = ({
   setFilter: Function;
 }) => {
   const router = useRouter();
-  const { account } = useContext(UserContext);
+  const { account, factory } = useContext(UserContext);
   // const [userNavbar, setUserNavar] = useState(false);
   const [userImage, setUserImage] = useState<string>("/img/user-default.png");
+
+  const [factorySeleced, setFactorySeleced] = useState<string>("");
 
   const dropdownRef = useRef<HTMLElement>(null);
   const [isActive, setIsActive]: [boolean, Function] = useDetectOutsideClick({
@@ -33,10 +37,16 @@ const Header = ({
   };
 
   useEffect(() => {
-    if (account !== undefined) {
+    account &&
+      typeof account.get === "function" &&
       setUserImage(account.get("avatar").url());
+    if (factory && !factory.value) {
+      // factory.length > 1 &&
+      //   console.log("redireccionar a la seleccion de factory");
+      const [firstFactory] = factory;
+      setFactorySeleced(firstFactory.get("name"));
     }
-  }, [account]);
+  }, [account, factory]);
 
   return (
     <>
@@ -44,11 +54,15 @@ const Header = ({
         <div className="header_inner">
           <div className="header_inner_flex">
             <div className="item">
-              <Link href={{ pathname: "/" }}>
-                <a className="mt-2 logo_colmena">
-                  <Image height="29" width="133" src="/img/logo.png" />
-                </a>
-              </Link>
+              <div className="item_logo">
+                <Link href={{ pathname: "/" }}>
+                  <a className="mt-2 logo_colmena">
+                    <IcoColmenaIcon />
+                    <IcoColmenaText />
+                  </a>
+                </Link>
+                <div className="item_factory">{factorySeleced}</div>
+              </div>
             </div>
             <div className="item">
               <div className="ico_search">
@@ -124,7 +138,11 @@ const Header = ({
             @apply md:bg-opacity-50 bg-colmena backdrop-filter backdrop-blur mx-auto;
           }
           .logo_colmena {
-            @apply w-20 md:w-auto;
+            @apply w-20 md:w-auto flex flex-row mt-0;
+          }
+
+          .logo_colmena :global(svg) {
+            @apply mr-1;
           }
 
           .header_inner {
@@ -140,6 +158,14 @@ const Header = ({
 
           .item {
             @apply flex items-center;
+          }
+
+          .item_logo {
+            @apply h-full flex flex-col;
+          }
+
+          .item_factory {
+            @apply text-xs absolute left-10 top-11 text-white uppercase;
           }
 
           .button_ico {

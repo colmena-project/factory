@@ -11,7 +11,13 @@ import { ParseServer } from "../../lib/parse";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-export const LoginForm = ({ setAccount }: { setAccount: Function }) => {
+export const LoginForm = ({
+  setAccount,
+  setFactory,
+}: {
+  setAccount: Function;
+  setFactory: Function;
+}) => {
   const { isLoginLoading, hasLoginError, menssageError, login, isAuth } =
     useUser();
 
@@ -35,8 +41,13 @@ export const LoginForm = ({ setAccount }: { setAccount: Function }) => {
 
   const setAccountData = async () => {
     const currentUser = ParseServer.User.current();
-    const data = await profileApi.getMyAccount(currentUser.id, true);
-    setAccount(data);
+    const datas = await Promise.allSettled([
+      profileApi.getMyAccount(currentUser.id, true),
+      profileApi.getMyFactorys(currentUser.id),
+    ]);
+    const [account, factorys] = datas;
+    setAccount(account);
+    setFactory(factorys);
   };
 
   useEffect(() => {
@@ -57,22 +68,25 @@ export const LoginForm = ({ setAccount }: { setAccount: Function }) => {
           height="46"
         />
       </div>
+      <div className="type_app">FACTORY</div>
 
       {isLoginLoading && (
-        <div className="message_container">
-          <div className="message">
-            <Spinner />
-            <strong className="message_info">
-              Controlando las credenciales
-            </strong>
+        <div className="spiner-login">
+          <div className="spiner-login__container">
+            <Spinner fullPage={true}>
+              <strong className="message_info">
+                Controlando las credenciales
+              </strong>
+            </Spinner>
           </div>
         </div>
       )}
       {isAuth && (
-        <div className="message_container">
-          <div className="message">
-            <Spinner />
-            <strong className="message_info">Redireccionando</strong>
+        <div className="spiner-login">
+          <div className="spiner-login__container">
+            <Spinner fullPage={true}>
+              <strong className="message_info">Redireccionando</strong>
+            </Spinner>
           </div>
         </div>
       )}
@@ -139,6 +153,18 @@ export const LoginForm = ({ setAccount }: { setAccount: Function }) => {
           }
           .logo_image {
             @apply w-1/2;
+          }
+
+          .spiner-login {
+            @apply absolute w-screen h-screen top-0 left-0;
+          }
+
+          .spiner-login__container {
+            @apply w-screen h-screen;
+          }
+
+          .type_app {
+            @apply flex items-center justify-center mb-6 text-colmena font-bold;
           }
 
           .form_login {

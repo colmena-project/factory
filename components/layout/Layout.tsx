@@ -13,7 +13,10 @@ export const Layout = ({
   setFilter: Function;
 }) => {
   const router = useRouter();
-  const isLogin = router.asPath === "/auth/login" ? true : false;
+  const isLogin =
+    router.asPath === "/auth/login" || router.asPath === "/auth/reset-password"
+      ? true
+      : false;
   return isLogin ? (
     <LayoutLogin>{children}</LayoutLogin>
   ) : (

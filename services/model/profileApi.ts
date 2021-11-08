@@ -1,5 +1,6 @@
 import { ApiCore } from "../api/core";
 import Parse from "parse";
+
 const model = "Account";
 
 class ApiCoreProfile extends ApiCore {
@@ -33,6 +34,18 @@ class ApiCoreProfile extends ApiCore {
       const error = new Error(`Error al recuperar la cuenta. ${err.message}`);
       throw error;
     }
+  }
+
+  async getMyFactorys(userId: string) {
+    const query = new Parse.Query(Parse.User);
+    query.equalTo("objectId", userId);
+    const user = await query.first();
+    // Get RecyclingCenters
+    const recyclingCenters = await user
+      .relation("recyclingCenter")
+      .query()
+      .find();
+    return recyclingCenters;
   }
 
   async uploadPhotoProfile(
@@ -72,6 +85,16 @@ class ApiCoreProfile extends ApiCore {
     const accountData = this.patch(account, data);
     await accountData.pin();
     return accountData;
+  }
+
+  async getAccountByUserId(userId: string): Promise<Parse.Object> {
+    const acountObject: string = Parse.Object.extend("Account");
+    const queryUser: Parse.Query = new Parse.Query("User");
+    const user: Parse.Object | undefined = await queryUser.get(userId);
+
+    const query: Parse.Query = new Parse.Query(acountObject);
+    query.equalTo("user", user);
+    return await query.first();
   }
 }
 

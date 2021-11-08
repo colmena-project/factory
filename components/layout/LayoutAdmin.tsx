@@ -1,6 +1,8 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Header from "./Header";
 import { Alert } from "../alert/Alert";
+import { ParseServer } from "../../lib/parse";
+import { Spinner } from "../general";
 
 export const LayoutAdmin = ({
   children,
@@ -11,9 +13,16 @@ export const LayoutAdmin = ({
   filter: string;
   setFilter: Function;
 }) => {
+  const [isAuth, setIsAuth] = useState<boolean>(false);
+  const currentUser = ParseServer.User.current();
+
+  useEffect(() => {
+    setIsAuth(Boolean(currentUser));
+  }, []);
+
   return (
     <>
-      <Header filter={filter} setFilter={setFilter} />
+      {isAuth ? <Header filter={filter} setFilter={setFilter} /> : <Spinner />}
 
       <main className="container">
         <Alert />

@@ -39,12 +39,11 @@ export default function Logout() {
             <div className="front">
               <div className="container">
                 <div className="inner">
-                  <div className="message">
-                    <Spinner />
+                  <Spinner>
                     <strong className="message_info">
                       Cerrando la sesión del usuario
                     </strong>
-                  </div>
+                  </Spinner>
                 </div>
               </div>
             </div>

@@ -1,25 +1,30 @@
 import React from "react";
+import { WASTED_CONTAINER_STATUS } from "../../lib/constants";
 
-export const StateBadge = (props) => {
-  const { state, percent } = props;
-
+export const StateBadge = ({
+  state,
+  percent,
+}: {
+  state: string;
+  percent: number;
+}) => {
   let text = "Terminado";
   let backgroundColor = "background-color: #4CB5AB";
   let icon = "/icons/sinpagar.png";
   let color = "white";
   let classNameBadge = "badge_progress";
 
-  if (state == "paid") {
+  if (state == WASTED_CONTAINER_STATUS.PAID) {
     icon = "/icons/pagado.png";
   }
 
-  if (state === "rejected") {
+  if (state === WASTED_CONTAINER_STATUS.REJECTED) {
     backgroundColor = "background-color: #FF4081";
     icon = "/icons/vermas.png";
     text = "Rechazado";
   }
 
-  if (state === "in_progress") {
+  if (state === WASTED_CONTAINER_STATUS.IN_PROGRESS) {
     let max = percent - 120;
     backgroundColor = `background-color: #EEEEEE; background-image: linear-gradient(to right, #4CB5AB ${percent}%, transparent ${max}%)`;
     icon = null;
