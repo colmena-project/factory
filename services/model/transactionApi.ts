@@ -115,8 +115,13 @@ class ApiCoreTransaction extends ApiCore {
     try {
       return await Parse.Cloud.run("registerPayment", resource);
     } catch (err) {
+      const mensajeError =
+        err.message ==
+        "Transaction could not be Accept. Detail: The Recycling Center has not enough money"
+          ? "El centro de Reciclaje no tiene dinero suficiente"
+          : err.message;
       const error = new Error(
-        `Error al registrar el Payment. Motivo: ${err.message}`
+        `Error al registrar el Pago. Motivo: ${mensajeError}`
       );
       throw error;
     }

@@ -116,13 +116,23 @@ export const TransaccionEdit = ({
       });
     });
 
-    await transactionApi.registerPayment(transactionId, container);
-    setPagado(true);
-
-    alertService.success(`La transacción fue pagada con exito`, {
-      keepAfterRouteChange: true,
-      modal: true,
-    });
+    try {
+      setPagado(true);
+      setLoading("loading");
+      await transactionApi.registerPayment(transactionId, container);
+      setLoading("iddle");
+      alertService.success(`La transacción fue pagada con exito`, {
+        keepAfterRouteChange: true,
+        modal: true,
+      });
+    } catch (e) {
+      setPagado(false);
+      setLoading("iddle");
+      alertService.error(`${e}`, {
+        keepAfterRouteChange: true,
+        modal: true,
+      });
+    }
   };
 
   useEffect(() => {
@@ -131,95 +141,97 @@ export const TransaccionEdit = ({
 
   return (
     <>
-      {loading === "loading" ? (
-        <Spinner />
-      ) : (
-        <div className="container_row">
-          <TransaccionEditHeader
-            pagado={pagado}
-            transaction={transactionTrasport}
-          />
-          <div className="operacion_detail">
-            <table className="table-wasted">
-              <thead>
-                <tr>
-                  <th className="th_font th_1_12">Pedido</th>
-                  <th className="th_font th_1_12">Contenedor</th>
-                  <th className="th_font th_2_12">Recovery</th>
-                  <th className="th_font th_2_12">KG</th>
-                  <th className="th_font th_1_12">Pago (KG)</th>
-                  <th className="th_font th_1_12">KM</th>
-                  <th className="th_font th_1_12">Pago (KM)</th>
-                  <th className="th_font th_1_12"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {transactionTrasport &&
-                  transactionTrasport.container.map((element, index) => {
-                    return (
-                      <ContainerHistory
-                        key={index}
-                        container={element}
-                        number={index + 1}
-                        setTransportTotal={setTransportTotal}
-                        setRecoveryTotal={setRecoveryTotal}
-                        disabled={pagado}
-                        recoveryTotal={recoveryTotal}
-                      />
-                    );
-                  })}
-              </tbody>
-            </table>
-          </div>
-          <div className="operacion_end">
-            <div className="operacion_end_total">
-              <div className="element">
-                <div>Total por Material</div>
-                {recoveryTotal && (
-                  <>
-                    <div className="element_partial">
-                      {recoveryTotal.total} KG
-                    </div>
-                    <div className="element_total">
-                      {recoveryTotal.crypto} jyc
-                    </div>
-                  </>
-                )}
-              </div>
-              <div className="element">
-                <div>Total por Transporte</div>
-                {transportTotal && (
-                  <>
-                    <div className="element_partial">
-                      {transportTotal.total} KM
-                    </div>
-                    <div className="element_total">
-                      {transportTotal.crypto.toFixed(4)} jyc
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className="operacion_end_action">
-              <div>
-                <Button disabled={pagado} typeButton="button">
-                  Guardar
-                </Button>
-              </div>
-
-              <div>
-                <Button
-                  disabled={pagado}
-                  typeButton="button"
-                  onClick={paymentHandler}
-                >
-                  Finalizar
-                </Button>
-              </div>
-            </div>
-          </div>
+      <div className="container_row">
+        <TransaccionEditHeader
+          pagado={pagado}
+          transaction={transactionTrasport}
+        />
+        <div className="operacion_detail">
+          <table className="table-wasted">
+            <thead>
+              <tr>
+                <th className="th_font th_1_12">Pedido</th>
+                <th className="th_font th_1_12">Contenedor</th>
+                <th className="th_font th_2_12">Recovery</th>
+                <th className="th_font th_2_12">KG</th>
+                <th className="th_font th_1_12">Pago (KG)</th>
+                <th className="th_font th_1_12">KM</th>
+                <th className="th_font th_1_12">Pago (KM)</th>
+                <th className="th_font th_1_12"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactionTrasport &&
+                transactionTrasport.container.map((element, index) => {
+                  return (
+                    <ContainerHistory
+                      key={index}
+                      container={element}
+                      number={index + 1}
+                      setTransportTotal={setTransportTotal}
+                      setRecoveryTotal={setRecoveryTotal}
+                      disabled={pagado}
+                      recoveryTotal={recoveryTotal}
+                    />
+                  );
+                })}
+            </tbody>
+          </table>
         </div>
-      )}
+        <div className="operacion_end">
+          {loading === "loading" ? (
+            <Spinner />
+          ) : (
+            <>
+              <div className="operacion_end_total">
+                <div className="element">
+                  <div>Total por Material</div>
+                  {recoveryTotal && (
+                    <>
+                      <div className="element_partial">
+                        {recoveryTotal.total} KG
+                      </div>
+                      <div className="element_total">
+                        {recoveryTotal.crypto} jyc
+                      </div>
+                    </>
+                  )}
+                </div>
+                <div className="element">
+                  <div>Total por Transporte</div>
+                  {transportTotal && (
+                    <>
+                      <div className="element_partial">
+                        {transportTotal.total} KM
+                      </div>
+                      <div className="element_total">
+                        {transportTotal.crypto.toFixed(4)} jyc
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+              <div className="operacion_end_action">
+                <div>
+                  {/* <Button disabled={pagado} typeButton="button">
+                  Guardar
+                </Button> */}
+                </div>
+
+                <div>
+                  <Button
+                    disabled={pagado}
+                    typeButton="button"
+                    onClick={paymentHandler}
+                  >
+                    Finalizar
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
       <style jsx>
         {`
           .container_row {

@@ -6,5 +6,4 @@ export type Material = {
   unit: string;
 };
 
-export type LoadingType =  "iddle" | "loading" | "error";
-};
+export type LoadingType = "iddle" | "loading" | "error";
