@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import { transactionApi } from "../../services/model/transactionApi";
 import { profileApi } from "../../services";
 import { CONTAINER_STATUS, WASTED_CONTAINER_STATUS } from "../../lib/constants";
+import { Spinner } from "../general";
+import { LoadingType } from "../../type";
 
 export const RowWasteAcepted = ({
   transaction,
@@ -23,6 +25,8 @@ export const RowWasteAcepted = ({
   const [stated, setStated] = useState(WASTED_CONTAINER_STATUS.IN_PROGRESS);
   const [percent, setPercent] = useState<number>(0);
 
+  const [loading, setLoading] = useState<LoadingType>("loading");
+
   const getTransactionDetail = async () => {
     const details = await transactionApi.getContainerByTransaction(
       transaction.id
@@ -35,7 +39,7 @@ export const RowWasteAcepted = ({
         (element) => element.type === "COMPLETE"
       );
 
-      if (transactionComplete) {
+      if (transactionComplete.length > 0) {
         setPercent(100);
 
         setStated(WASTED_CONTAINER_STATUS.PAID);
@@ -64,6 +68,7 @@ export const RowWasteAcepted = ({
       } else {
         setPercent(0);
       }
+      setLoading("iddle");
     });
     setTotalEstimated(estimated);
     setTotalConfirmed(retrive);
@@ -86,79 +91,90 @@ export const RowWasteAcepted = ({
 
   return (
     <>
-      {user && transacionDetail && (
-        <tr key={transaction.id}>
+      {loading === "loading" ? (
+        <tr key={0}>
           <td>
-            <p>{dateCreated}</p>
-            {transaction.get("fromAddress").description}
-          </td>
-          <td className="desktop">
-            <div className=" avatar_conteiner">
-              <Image
-                src={
-                  user.get("avatar")
-                    ? user.get("avatar")
-                    : "/img/user-default.png"
-                }
-                alt="search"
-                width="24"
-                height="24"
-              />
-              <div className="ml-2">
-                <p>
-                  {user.get("firstName")} {user.get("lastName")}
-                </p>
-              </div>
-            </div>
-          </td>
-
-          <td className="desktop">
-            <p className="font-bold">
-              #{transaction.get("trackingCode") + " "}
-              {transacionDetail.details.map((element) => {
-                if (element.container) {
-                  return `${element.container.get("code")} `;
-                }
-              })}
-            </p>
-          </td>
-          <td className="mobil">
-            <p className="font-bold">#{transaction.get("trackingCode")}</p>
-          </td>
-
-          <td>
-            <StateBadge state={stated} percent={percent} />
-          </td>
-          <td className="center p-2">
-            <p>E: {totalEstimated}</p>
-            <p>R: {totalConfirmed}</p>
-          </td>
-          <td>
-            <div className="group_button">
-              <div className="button">
-                <Link
-                  href={{
-                    pathname: "/transaccion/[id]",
-                    query: { id: transaction.id },
-                  }}
-                >
-                  <a>
-                    <IcoAction>
-                      <IcoEdit />
-                    </IcoAction>
-                  </a>
-                </Link>
-              </div>
-              <div className="button ml-1">
-                <a href="">
-                  <IcoAction>
-                    <IcoDelete />
-                  </IcoAction>
-                </a>
-              </div>
+            <div>
+              <Spinner />
             </div>
           </td>
         </tr>
+      ) : (
+        user &&
+        transacionDetail && (
+          <tr key={transaction.id}>
+            <td>
+              <p>{dateCreated}</p>
+              {transaction.get("fromAddress").description}
+            </td>
+            <td className="desktop">
+              <div className=" avatar_conteiner">
+                <Image
+                  src={
+                    user.get("avatar")
+                      ? user.get("avatar")
+                      : "/img/user-default.png"
+                  }
+                  alt="search"
+                  width="24"
+                  height="24"
+                />
+                <div className="ml-2">
+                  <p>
+                    {user.get("firstName")} {user.get("lastName")}
+                  </p>
+                </div>
+              </div>
+            </td>
+
+            <td className="desktop">
+              <p className="font-bold">
+                #{transaction.get("trackingCode") + " "}
+                {transacionDetail.details.map((element) => {
+                  if (element.container) {
+                    return `${element.container.get("code")} `;
+                  }
+                })}
+              </p>
+            </td>
+            <td className="mobil">
+              <p className="font-bold">#{transaction.get("trackingCode")}</p>
+            </td>
+
+            <td>
+              <StateBadge state={stated} percent={percent} />
+            </td>
+            <td className="center p-2">
+              <p>E: {totalEstimated}</p>
+              <p>R: {totalConfirmed}</p>
+            </td>
+            <td>
+              <div className="group_button">
+                <div className="button">
+                  <Link
+                    href={{
+                      pathname: "/transaccion/[id]",
+                      query: { id: transaction.id },
+                    }}
+                  >
+                    <a>
+                      <IcoAction>
+                        <IcoEdit />
+                      </IcoAction>
+                    </a>
+                  </Link>
+                </div>
+                <div className="button ml-1">
+                  <a href="">
+                    <IcoAction>
+                      <IcoDelete />
+                    </IcoAction>
+                  </a>
+                </div>
+              </div>
+            </td>
+          </tr>
+        )
       )}
       <style jsx>
         {`

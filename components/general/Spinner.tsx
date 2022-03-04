@@ -32,7 +32,7 @@ export const Spinner = ({
           }
 
           .message_full_container .loading {
-            @apply m-1 p-1 h-screen bg-white bg-opacity-75 items-center;
+            @apply m-1 p-1 h-screen bg-white bg-opacity-80 items-center;
           }
           .loading {
             @apply w-screen m-7 p-12 z-10 flex justify-center backdrop-blur backdrop-opacity-5;

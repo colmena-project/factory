@@ -1,7 +1,5 @@
 import { RowWasteAcepted } from "./rowWasteAccepted";
 import Parse from "parse";
-import { data } from "../../data/dummy";
-import { RowType } from "./Type";
 import { useEffect, useState } from "react";
 import { transactionApi } from "../../services/model/transactionApi";
 import { LoadingType } from "../../type";
@@ -51,8 +49,8 @@ export const ListWasteAcepted = ({
         await transactionApi.getAlltransactionAccept(firstFactory.id);
       setListWasted(result);
       SetSubscription(subscription);
+      setLoading("iddle");
     }
-    setLoading("iddle");
   };
 
   useEffect(() => {
@@ -65,27 +63,30 @@ export const ListWasteAcepted = ({
 
   return (
     <>
-      {loading === "loading" ? (
-        <Spinner />
-      ) : (
-        <table className="">
-          <thead>
-            <tr>
-              <th className="with_2_12">Pedido</th>
-              <th className="with_2_12 desktop">Usuario</th>
-              <th className="with_2_12 mobil">Producto</th>
-              <th className="with_2_12 desktop">Transacción</th>
-              <th className="with_state">Estado</th>
-              <th className="with_2_12">Total</th>
-              <th className="with_action">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {listWasted &&
-              listWasted.map((row) => <RowWasteAcepted transaction={row} />)}
-          </tbody>
-        </table>
-      )}
+      <table className="">
+        <thead>
+          <tr>
+            <th className="with_2_12">Pedido</th>
+            <th className="with_2_12 desktop">Usuario</th>
+            <th className="with_2_12 mobil">Producto</th>
+            <th className="with_2_12 desktop">Transacción</th>
+            <th className="with_state">Estado</th>
+            <th className="with_2_12">Total</th>
+            <th className="with_action">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <>
+            {loading === "loading" ? (
+              <Spinner />
+            ) : (
+              listWasted &&
+              listWasted.map((row) => <RowWasteAcepted transaction={row} />)
+            )}
+          </>
+        </tbody>
+      </table>
+
       <style jsx>
         {`
           table {
