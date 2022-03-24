@@ -61,7 +61,7 @@ export const LoginForm = ({
     <>
       <div className="logo">
         <Image
-          src="/img/logo.png"
+          src="/img/logo.svg"
           className="logo_image"
           alt="Logo"
           width="213"

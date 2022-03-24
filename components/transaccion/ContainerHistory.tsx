@@ -178,7 +178,9 @@ export const ContainerHistory = ({
             {transactionRecovery &&
               `E. ${transactionRecovery.retribution.estimated} jyc`}
           </div>
-          <div>{retributionRecovery && `R. ${retributionRecovery} jyc`}</div>
+          <div>
+            {retributionRecovery && `R. ${retributionRecovery.toFixed(4)} jyc`}
+          </div>
         </td>
         <td>{transactionTransport && transactionTransport.kms}</td>
         <td>

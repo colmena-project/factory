@@ -192,7 +192,7 @@ export const TransaccionEdit = ({
                         {recoveryTotal.total} KG
                       </div>
                       <div className="element_total">
-                        {recoveryTotal.crypto} jyc
+                        {recoveryTotal.crypto.toFixed(4)} jyc
                       </div>
                     </>
                   )}
