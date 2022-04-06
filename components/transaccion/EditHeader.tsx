@@ -60,7 +60,7 @@ export const TransaccionEditHeader = ({ transaction, pagado }) => {
               )}
             </div>
             <div className="operacion_header_status_item">
-              <strong>Trakin :</strong># {transaction.trackingCode}
+              <strong>Tracking :</strong># {transaction.trackingCode}
             </div>
           </div>
         </div>
