@@ -39,6 +39,7 @@ const Header = ({
   useEffect(() => {
     account &&
       typeof account.get === "function" &&
+      account.get("avatar") &&
       setUserImage(account.get("avatar").url());
     if (factory && !factory.value) {
       // factory.length > 1 &&

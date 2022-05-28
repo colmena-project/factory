@@ -53,7 +53,9 @@ export const RowWasteAcepted = ({
                   element.objectId === elementRetribution.transaction.id
               );
 
-              if (transSearch) {
+              console.log(transSearch);
+
+              if (transSearch[0]) {
                 if (transSearch[0].type === "RECOVER") {
                   retrive += elementRetribution.confirmed;
                   estimated += elementRetribution.estimated;
@@ -67,6 +69,16 @@ export const RowWasteAcepted = ({
         });
       } else {
         setPercent(0);
+        element.history.forEach((historyContainer) => {
+          {
+            if (historyContainer.type === "RECOVER") {
+              estimated += historyContainer.estimated;
+            }
+            if (historyContainer.type === "TRANSPORT") {
+              estimated += historyContainer.retribution.estimated;
+            }
+          }
+        });
       }
       setLoading("iddle");
     });
