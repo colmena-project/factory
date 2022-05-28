@@ -1,0 +1,28 @@
+export const data = {
+  date: "02/02/2022",
+  address: "Bo. Pepito",
+  username: "@juan",
+  city: "Obera",
+  address: "Barrio Krause Escalera 41",
+  destination: "CP Cpo Viera (30KM)",
+  destinationAdress: "Av. de Té 300",
+  id: 405680,
+  transactionId: "00000001117",
+  wasteTypes: "PET 10, ORG 10",
+  state: "finished",
+  percent: 100,
+  individualCharge: false,
+  fullCharge: true,
+  order: [
+    {
+      order: 1,
+      conteiner: 00000001117,
+      wasteTypes: "PET 10, ORG 10",
+      origen: "@juan",
+      total1: "E. $29,192",
+      total2: "R. $28,192",
+    },
+  ],
+  total1: "E. $29,192",
+  total2: "R. $28,192",
+};

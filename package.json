@@ -1,0 +1,29 @@
+{
+  "name": "colmena-factory",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@parse/react-ssr": "0.0.1-alpha.14",
+    "formik": "^2.2.9",
+    "next": "^12.0.0",
+    "parse": "^3.2.0",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "rxjs": "^7.1.0",
+    "styled-jsx-plugin-postcss": "^4.0.1",
+    "yup": "^0.32.9"
+  },
+  "devDependencies": {
+    "@types/node": "^15.12.0",
+    "@types/react": "^17.0.9",
+    "autoprefixer": "^10.2.6",
+    "postcss": "^8.3.0",
+    "tailwindcss": "^2.1.4",
+    "typescript": "^4.3.2"
+  }
+}
