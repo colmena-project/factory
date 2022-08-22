@@ -5,3 +5,4 @@ export * from "./IcoUserGroup";
 export * from "./IcoArrow";
 export * from "./IcoColmenaText";
 export * from "./IcoColmenaIcon";
+export * from "./IcoDate";

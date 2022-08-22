@@ -1,6 +1,4 @@
-import * as React from "react";
-
-function IcoColmenaText(props) {
+export function IcoColmenaText(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       width={127}
@@ -16,5 +14,3 @@ function IcoColmenaText(props) {
     </svg>
   );
 }
-
-export default IcoColmenaText;

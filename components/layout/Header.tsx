@@ -5,8 +5,7 @@ import { useRouter } from "next/router";
 
 import { Context as UserContext } from "../../context/userContext";
 import { useDetectOutsideClick } from "../../hooks/useDetectOutsideClick";
-import { IcoColmenaIcon } from "../Icon";
-import IcoColmenaText from "../Icon/IcoColmenaText";
+import { IcoColmenaIcon, IcoDate, IcoColmenaText } from "../Icon";
 
 const Header = ({
   filter,
@@ -85,6 +84,11 @@ const Header = ({
               />
             </div>
             <div className="item">
+              <Link href="/report/material">
+                <a className="mt-2 logo_colmena">
+                  <IcoDate color="white" />
+                </a>
+              </Link>
               <button
                 type="button"
                 onClick={handleClickUser}
